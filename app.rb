@@ -19,21 +19,50 @@ class App < Sinatra::Base
     'Summer Instititue-Blender'
   end
 
-  get '/' do
-    logger.info('requsting the index')
-    @flash = { info: 'Welcome to Summer Institute!' }
-    erb(:index)
+  def projects_root
+    "#{__dir__}/projects"
   end
 
-  get "/projects/new" do
-    erb(:new_project)
+  def project_dirs
+    Dir.children(projects_root).reject {|dir| dir == 'input_files'}.sort_by(&:to_s)
+  end
+
+
+  get '/' do
+    logger.info('requsting the index')
+    @flash = session.delete(:flash) || { info: 'Welcome to Summer Institute!' }
+    
+    @project_dirs = project_dirs
+    
+    erb(:index)
+
+  end
+
+  get "/projects/:dir" do
+    if params[:dir] == "new" || params[:dir] == "input_files"
+      erb(:new_project)
+    else
+      @dir = Pathname("#{projects_root}/#{params[:dir]}")
+      @flash = session.delete(:flash)
+
+      unless @dir.directory? || @dir.readable?
+        session[:flash] = {danger: "#{@dir} does not exist"}
+        redirect(url("/"))
+      end
+
+
+      erb(:show_project)
+    end
   end
 
   post "/projects/new" do
     logger.info("Trying to render frames with: #{params.inspect}")
-    @flash = {info: "Trying to render frames with: #{params.inspect}"}
 
-    erb(:new_project)
+    dir = params[:name].downcase.gsub(' ', '_')
+    "#{projects_root}/#{dir}".tap{ |d| FileUtils.mkdir_p(d) }
+
+    session[:flash] = {info: "made new project '#{params[:name]}'"}
+    redirect(url("/projects/#{dir}"))
   end
 
 end
