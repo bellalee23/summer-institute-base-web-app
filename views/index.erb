@@ -11,10 +11,10 @@
       <div>
         <a href="<%= url("/projects/#{dir}")%>" class="text-center">
           <i class="fas fa-fw fa-camera fa-5x "></i>
-          <p><%=  dir.gsub(' ', '_').capitalize %></p>
+          <p><%=  dir.gsub('_', ' ').capitalize %></p>
         </a>
       </div>
     <li>
     <% end %>
   </ol>
-</div>
+</div>  
