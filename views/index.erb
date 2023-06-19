@@ -9,12 +9,25 @@
     <% @project_dirs.each do |dir| %>
     <li class="list-group-item btn btn-outline-dark m-3 border">
       <div>
-        <a href="<%= url("/projects/#{dir}")%>" class="text-center">
+        <a href="<%= url("/projects/#{dir}") %>" class="text-center">
           <i class="fas fa-fw fa-camera fa-5x "></i>
           <p><%=  dir.gsub('_', ' ').capitalize %></p>
         </a>
       </div>
-      <button type="button" class="btn btn-danger float-center">Delete</button>
+      <button class="btn btn-basic float-center" type="button" data-toggle="collapse" data-target="#collapseExample_<%= dir %>" aria-expanded="false" aria-controls="collapseExample" >
+        Options
+      </button>
+      <div class="collapse" id="collapseExample_<%= dir %>">
+        <div class="card card-body">
+          <button type="button" class="btn btn-danger float-center">Delete</button>
+        </div>
+        <div class="card card-body">
+          <button type="button" class="btn btn-info float-center">Edit Symbol</button>
+        </div>
+        <div class="card card-body">
+          <button type="button" class="btn btn-info float-center">Rename</button>
+        </div>
+      </div>
     </li>
     <% end %>
   </ol>
