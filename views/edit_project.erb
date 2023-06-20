@@ -18,15 +18,23 @@
       </div>
 
       <div class="form-group col-md-6">
-        <label for="blend_file">Type Name of New Icon</label>
-        <input type="text" name="new_icon" class="form-control" id="new_icon" value="<%= @project_icon%>">        
+        <label for="icon">Select New Icon</label>
+        <select  name="new_icon" class="form-control" id="new_icon">
+
+          <%- all_icons.each do |icon| -%>
+  
+            <option value="<%= icon %>"><%= icon %></option>
+  
+          <%- end -%>
+  
+        <!-- <input type="text" name="new_icon" class="form-control" id="new_icon" value="<%= @project_icon%>">        
         <% all_icons.each do |icon| %>
           <li class="list-group-item btn btn-outline-dark m-3 border">
             <div class="my-2"><%= icon %>
               <i class="fas fa-fw fa-<%= icon %> fa-5x "></i>
             </div>
           </li>
-        <% end %>
+        <% end %> -->
       </div>
     </div>
 
