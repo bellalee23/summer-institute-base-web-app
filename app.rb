@@ -81,19 +81,24 @@ end
     @flash = session.delete(:flash) || { info: 'Welcome to Summer Institute!' }
     
     @project_dirs = project_dirs
-    
+
+   
     erb(:index)
 
   end
 
   get "/projects/:dir" do
-    if params[:dir] == "new" || params[:dir] == "input_files"
+    if params[:dir] == 'new' || params[:dir] == "input_files"
       erb(:new_project)
     else
       @dir = Pathname("#{projects_root}/#{params[:dir]}")
       @flash = session.delete(:flash)
       @uploaded_blend_files = Dir.glob("#{input_files_dir}/*.blend").map { |f| File.basename(f)} 
-      @project_name = @dir.basename.to_s.gsub(" ", "_").capitalize
+      file = File.read("#{@dir}/.info")
+      file_hash = JSON.parse(file)
+      @project_name = file_hash["name"]
+      # @project_name = @dir.basename.to_s.gsub(" ", "_").capitalize
+      
       
       unless @dir.directory? || @dir.readable?
         session[:flash] = {danger: "#{@dir} does not exist"}
@@ -119,18 +124,60 @@ end
 
   post "/projects/new" do
     logger.info("Trying to render frames with: #{params.inspect}")
+    
+    dir = rand(1..999999)
+    
+    project_info = {
+      "name" => params[:name] ,
+      "icon" => "camera"
+    }
+    
+    full_dir = "#{projects_root}/#{dir}".tap{ |d| FileUtils.mkdir_p(d) }
 
-    dir = params[:name].downcase.gsub(' ', '_')
-    "#{projects_root}/#{dir}".tap{ |d| FileUtils.mkdir_p(d) }
+    File.open("#{full_dir}/.info", "w") do |f|
+      f.write(project_info.to_json)
+    end
 
     session[:flash] = {info: "made new project '#{params[:name]}'"}
     redirect(url("/projects/#{dir}"))
   end
   
-  get "/delete/:dir" do
+  post "/delete/:dir" do
     dir = params[:dir]
+    file = File.read("#{projects_root}/#{dir}/.info")
+    file_hash = JSON.parse(file)
+    session[:flash] = {info: "Successfully deleted  '#{file_hash["name"]}'"}
     FileUtils.remove_dir("#{projects_root}/#{dir}", true)
-    session[:flash] = {info: "sucessfully deleted'#{params[:dirs]}'" }
+    redirect(url("/"))
+  end
+
+  get "/edit/:dir" do
+
+    if params[:dir] == "new" || params[:dir] == "input_files"
+      erb(:new_project)
+    else
+      @dir = Pathname("#{projects_root}/#{params[:dir]}")
+      @flash = session.delete(:flash)
+      @uploaded_blend_files = Dir.glob("#{input_files_dir}/*.blend").map { |f| File.basename(f)} 
+      file = File.read("#{@dir}/.info")
+      file_hash = JSON.parse(file)
+      @project_name = file_hash["name"]
+      
+      unless @dir.directory? || @dir.readable?
+        session[:flash] = {danger: "#{@dir} does not exist"}
+        redirect(url("/"))
+      end
+
+      @dir = params[:dir]
+
+      erb(:edit_project)
+    end
+  end
+
+  post "/save/:dir" do
+    @dir = params[:dir]
+
+    session[:flash] = {info: "Sucessfully renamed '#{@dir}'" }
     redirect(url("/"))
   end
 
@@ -180,5 +227,7 @@ end
       redirect(url("/projects/#{output_dir.split('/').last}"))
     end
   end
+
+
 
 end
