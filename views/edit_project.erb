@@ -12,7 +12,7 @@
 
         <label for="blend_file">Rename Project</label>
 
-        <input type="text" name="Rename" class="form-control" id="new_name" value="<%= @project_name%>">
+        <input type="text" name="rename" class="form-control" id="new_name" value="<%= @project_name%>">
 
         
         
@@ -23,13 +23,9 @@
 
       <div class="form-group col-md-6">
 
-        <label for="uploaded_blend_file">Choose New Icon</label>
+        <label for="blend_file">Type Name of New Icon</label>
 
-        <select  name="new_icon" class="form-control" id="new_icon">
-
-        
-
-          <option value="option1"></option>
+        <input type="text" name="new_icon" class="form-control" id="new_icon" value="<%= @project_icon%>">
 
         
 

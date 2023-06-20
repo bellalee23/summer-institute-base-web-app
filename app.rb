@@ -82,9 +82,22 @@ end
     
     @project_dirs = project_dirs
 
-   
+    @all_projects = all_projects
+    
     erb(:index)
 
+  end
+
+  def all_projects
+    project_dirs.map do |dir|
+      file = File.read("#{projects_root}/#{dir}/.info")
+      file_hash = JSON.parse(file)
+      {
+        dir: dir,
+        name: file_hash["name"]
+      }
+    end
+    
   end
 
   get "/projects/:dir" do
@@ -156,19 +169,24 @@ end
     if params[:dir] == "new" || params[:dir] == "input_files"
       erb(:new_project)
     else
-      @dir = Pathname("#{projects_root}/#{params[:dir]}")
+      @dir = params[:dir]
       @flash = session.delete(:flash)
       @uploaded_blend_files = Dir.glob("#{input_files_dir}/*.blend").map { |f| File.basename(f)} 
-      file = File.read("#{@dir}/.info")
+      file = File.read("#{projects_root}/#{@dir}/.info")
       file_hash = JSON.parse(file)
       @project_name = file_hash["name"]
+      @project_icon = file_hash["icon"]
       
-      unless @dir.directory? || @dir.readable?
-        session[:flash] = {danger: "#{@dir} does not exist"}
+      
+
+      @path_dir = Pathname("#{projects_root}/#{@dir}")
+
+      unless @path_dir.directory? || @path_dir.readable?
+        session[:flash] = {danger: "#{@path_dir} does not exist"}
         redirect(url("/"))
       end
 
-      @dir = params[:dir]
+      
 
       erb(:edit_project)
     end
@@ -176,9 +194,19 @@ end
 
   post "/save/:dir" do
     @dir = params[:dir]
+    #read file, returns hash. update hash, save hash back into info
+    file = File.read("#{projects_root}/#{@dir}/.info")
+    file_hash = JSON.parse(file)
+    file_hash["name"] = params[:rename]
+    file_hash["icon"] = params[:new_icon]
+    File.open("#{projects_root}/#{@dir}/.info", "w") do |f|
+     f.write(file_hash.to_json)
+    end
 
-    session[:flash] = {info: "Sucessfully renamed '#{@dir}'" }
+    session[:flash] = {info: "Sucessfully renamed '#{file_hash["name"]}'" }
     redirect(url("/"))
+
+  
   end
 
   post "/render/frames" do

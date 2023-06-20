@@ -8,24 +8,24 @@
 
 <div class="row my-5">
   <ol class="list-group list-group-horizontal flex-wrap col-md-12">
-    <% @project_dirs.each do |dir| %>
+    <% @all_projects.each do |project| %>
     <li class="list-group-item btn btn-outline-dark m-3 border">
       <div>
-        <div class="my-2"><%= @project_name %></div>
+        <div class="my-2"><%= project[:name] %></div>
         <i class="fas fa-fw fa-camera fa-5x "></i>
       </div>
         <div class="my-2">
-          <a href="<%= url("/projects/#{dir}") %>" class="btn btn-primary float-center">Open</a>
+          <a href="<%= url("/projects/#{project[:dir]}") %>" class="btn btn-primary float-center">Open</a>
         </div>
-        <button class="btn btn-basic float-center" type="button" data-toggle="collapse" data-target="#collapseExample_<%= dir %>" aria-expanded="false" aria-controls="collapseExample">Options</button>
-        <div class="collapse" id="collapseExample_<%= dir %>">
+        <button class="btn btn-basic float-center" type="button" data-toggle="collapse" data-target="#collapseExample_<%= project[:dir] %>" aria-expanded="false" aria-controls="collapseExample">Options</button>
+        <div class="collapse" id="collapseExample_<%= project[:dir] %>">
           <div class="my-2">
-           <form action="<%= url("/delete/#{dir}") %>" method="post">
+           <form action="<%= url("/delete/#{project[:dir]}") %>" method="post">
               <button type="submit" class="btn btn-danger float-center" onclick="return confirm('Are you sure you want to delete this item?');">Delete Project</button>
             </form>
          </div>
           <div class="my-2">
-            <a href="<%= url("/edit/#{dir}") %>" class="btn btn-info float-center">Edit</a>
+            <a href="<%= url("/edit/#{project[:dir]}") %>" class="btn btn-info float-center">Edit</a>
           </div>
         </div>
     </li>
