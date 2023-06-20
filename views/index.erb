@@ -12,7 +12,7 @@
     <li class="list-group-item btn btn-outline-dark m-3 border">
       <div>
         <div class="my-2"><%= project[:name] %></div>
-        <i class="fas fa-fw fa-camera fa-5x "></i>
+        <i class="fas fa-fw fa-<%= project[:icon] %> fa-5x "></i>
       </div>
         <div class="my-2">
           <a href="<%= url("/projects/#{project[:dir]}") %>" class="btn btn-primary float-center">Open</a>
