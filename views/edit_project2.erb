@@ -1,0 +1,38 @@
+<h1 class ='d-flex my-2 justify-content-center'>Edit <%= @project_name %></h1>
+<script src="<%=url("icons.js") %>" type="application/javascript"></script>
+
+
+<form action="<%= url("/save/#{@dir}") %>" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group col-md-8">
+                <label for="rename">Rename Project</label>
+                <input type="text" name="rename" class="form-control" id="new_name" value="<%= @project_name %>">
+            </div>
+   
+            <div class="row justify-content-md-end col-11">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label>Choose Icon</label>
+                <input type="text" name="new_icon" class="form-control" id="icon_input" value="<%= @project_icon %>" >
+            </div>
+            
+            <ol class="list-group list-group-horizontal flex-wrap">
+                <%- all_icons.each do |icon| -%>
+                    <li class="list-group-item btn btn-outline-dark m-3 border">
+                        <i class="fas fa-fw fa-<%= icon %> fa-5x" data-name="<%= icon %>"></i>
+                        <p><%= icon %></p>
+                    </li>
+
+                <%- end -%>
+            </ol>
+
+        </div>
+    </div>
+ 
+    
+ 
+
+</form>

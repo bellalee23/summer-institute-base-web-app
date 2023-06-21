@@ -187,9 +187,7 @@ end
         redirect(url("/"))
       end
 
-      
-
-      erb(:edit_project)
+      erb(:edit_project2)
     end
   end
 
@@ -235,6 +233,7 @@ end
 
     session[:flash] = { info: "submitted job #{job_id}" }
     redirect(url("/projects/#{dir.split('/').last}"))
+  end
 
     post '/render/video' do
       logger.info("Trying to render video with: #{params.inspect}")
@@ -255,7 +254,7 @@ end
       session[:flash] = { info: "Submitted job #{job_id}"}
       redirect(url("/projects/#{output_dir.split('/').last}"))
     end
-  end
+
 
   def all_icons
     [
