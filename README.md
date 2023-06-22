@@ -6,7 +6,14 @@
 This app is meant as a base Passenger app that runs in an [OnDemand] portal
 that uses the [Sinatra] web framework for OSC's [Summer Institute].
 
+To open in any other server:
+open in terminal
+bin/setup
+bin/start
+localhost:(port #)
+
 Feel free to modify it anyway you see fit.
+
 
 ## Deploy
 

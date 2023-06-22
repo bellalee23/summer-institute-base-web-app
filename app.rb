@@ -95,7 +95,8 @@ end
       {
         dir: dir,
         name: file_hash["name"],
-        icon: file_hash["icon"]
+        icon: file_hash["icon"],
+        color: file_hash["color"]
       }
     end
     
@@ -143,7 +144,8 @@ end
     
     project_info = {
       "name" => params[:name] ,
-      "icon" => "camera"
+      "icon" => "camera" ,
+      "color" => "dark"
     }
     
     full_dir = "#{projects_root}/#{dir}".tap{ |d| FileUtils.mkdir_p(d) }
@@ -177,6 +179,7 @@ end
       file_hash = JSON.parse(file)
       @project_name = file_hash["name"]
       @project_icon = file_hash["icon"]
+      @project_color = file_hash["color"]
       
       
 
@@ -198,6 +201,7 @@ end
     file_hash = JSON.parse(file)
     file_hash["name"] = params[:rename]
     file_hash["icon"] = params[:new_icon]
+    file_hash["color"] = params[:new_color]
     File.open("#{projects_root}/#{@dir}/.info", "w") do |f|
      f.write(file_hash.to_json)
     end
@@ -255,6 +259,17 @@ end
       redirect(url("/projects/#{output_dir.split('/').last}"))
     end
 
+  def all_colors
+    [
+      'primary',
+      'secondary',
+      'success',
+      'danger',
+      'warning',
+      'info',
+      'dark'
+    ]
+  end
 
   def all_icons
     [
